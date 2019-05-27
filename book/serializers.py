@@ -26,7 +26,6 @@ class BookSerializer(ModelSerializer):
         return instance.release_date.strftime("%Y-%m-%d")
 
     def create(self, validated_data):
-        print(validated_data)
         instance = Book.objects.create(**validated_data)
         for author in authors:
             instance.authors.add(author)
