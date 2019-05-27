@@ -2,7 +2,6 @@ from datetime import datetime
 from rest_framework.serializers import (
     ModelSerializer,
     SerializerMethodField,
-    SlugRelatedField
 )
 from .models import Book, Author
 
@@ -25,12 +24,23 @@ class BookSerializer(ModelSerializer):
     def get_release_date(self, instance):
         return instance.release_date.strftime("%Y-%m-%d")
 
-    def create(self, validated_data):
-        instance = Book.objects.create(**validated_data)
-        for author in authors:
-            instance.authors.add(author)
+    class Meta:
+        model = Book
+        fields = (
+            'id',
+            'name',
+            'isbn',
+            'authors',
+            'number_of_pages',
+            'publisher',
+            'country',
+            'release_date'
+        )
+        depth = 1
 
-        return instance
+
+class BookCreateSerializer(ModelSerializer):
+    authors = AuthorSerializer(many=True)
 
     class Meta:
         model = Book
@@ -44,3 +54,11 @@ class BookSerializer(ModelSerializer):
             'country',
             'release_date'
         )
+
+    def create(self, validated_data):
+        authors_data = validated_data.pop('authors')
+        instance = Book.objects.create(**validated_data)
+        for author in authors_data:
+            author_instance, created = Author.objects.get_or_create(**author)
+            instance.authors.add(author_instance)
+        return instance

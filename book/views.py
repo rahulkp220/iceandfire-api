@@ -9,9 +9,12 @@ from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.renderers import JSONRenderer
 
-# Create your views here.
 from .models import Book
-from .serializers import BookSerializer, AuthorSerializer
+from .serializers import (
+    BookSerializer,
+    BookCreateSerializer,
+    AuthorSerializer
+)
 
 
 class ExternalBookView(APIView):
@@ -63,7 +66,7 @@ class BookViewset(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         books = self.get_queryset()
         if books:
-            serializer = BookSerializer(books, many=True)
+            serializer = self.get_serializer(books, many=True)
             serializer_data = serializer.data
         else:
             serializer_data = []
@@ -73,15 +76,15 @@ class BookViewset(viewsets.ModelViewSet):
             'data': serializer_data
         })
 
-    # TODO: needs work!
     def create(self, request, *args, **kwargs):
-        serializer = BookSerializer(data=request.data)
+        serializer = BookCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        instance = self.perform_create(serializer)
+        model_obj = serializer.save()
+        model_obj_data = self.get_serializer(model_obj).data
         return Response({
             'status_code': 201,
             'status': 'success',
-            'data': BookSerializer(instance).data
+            'data': model_obj_data
         })
 
     def retrieve(self, request, *args, **kwargs):
