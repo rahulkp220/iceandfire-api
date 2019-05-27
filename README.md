@@ -1,4 +1,4 @@
-## IceAndFireAPI :fire: :rocket:
+## IceAndFireAPI :shaved_ice: :fire:
 A simple python/django based CRUD application to play around some of the APIs provided by the website.
 
 ### How to Install
@@ -12,7 +12,6 @@ source env/bin/activate
 python install -r requirements.txt
 python manage.py migrate
 python manage.py runserver 8080
-
 ```
 
 You can also access the `admin` interface of django by using `python manage.py createsuperuser`
@@ -20,12 +19,14 @@ You can also access the `admin` interface of django by using `python manage.py c
 ### List of APIs
 Once the server is up and running, go through
 
-#### API I
+#### Simple API
 * `http://localhost:8080/api/external-books/` to fetch all the results
-* `http://localhost:8080/api/external-books/?name=A Game of Thrones` to fetch results for a specific book.
+* `http://localhost:8080/api/external-books/?name=nameOfABook` to fetch results for a specific book.
 
-#### RESTful API II
+#### DRF based REST API
 `http://localhost:8080/api/v1/books/` for all CRUD operations
 
 
+
+Contributions Welcome! 
 :tada: :tada:
