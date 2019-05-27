@@ -8,19 +8,19 @@ from .models import Book, Author
 
 
 class AuthorSerializer(ModelSerializer):
- 
+
     class Meta:
         model = Author
         fields = ('name',)
 
 
 class BookSerializer(ModelSerializer):
-    authors = AuthorSerializer(many=True)
+    authors = SerializerMethodField()
     release_date = SerializerMethodField()
 
-    # def get_authors(self, instance):
-    #     qs = instance.authors.get_queryset()
-    #     return [auth.name for auth in qs]
+    def get_authors(self, instance):
+        qs = instance.authors.get_queryset()
+        return [auth.name for auth in qs]
 
     def get_release_date(self, instance):
         return instance.release_date.strftime("%Y-%m-%d")

@@ -2,38 +2,41 @@ import requests
 from datetime import datetime
 
 from django.shortcuts import render
-from django.http import JsonResponse
 
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.views import APIView
+from rest_framework.renderers import JSONRenderer
 
 # Create your views here.
 from .models import Book
 from .serializers import BookSerializer, AuthorSerializer
 
 
-def external_books(request):
-    query = request.GET.get('name', '')
-    response = requests.get(f"https://www.anapioficeandfire.com/api/books?name={query}")
-    data = []
-    if response.ok:
-        for d in response.json():
-            data.append({
-                'name': d['name'],
-                'isbn': d['isbn'],
-                'authors': d['authors'],
-                'numberOfPages': d['numberOfPages'],
-                'publisher': d['publisher'],
-                'country': d['country'],
-                'release_date': datetime.strptime(d['released'], '%Y-%m-%dT%H:%M:%S').strftime("%Y-%m-%d")
+class ExternalBookView(APIView):
+    renderer_classes = (JSONRenderer, )
+  
+    def get(self, request):
+        query = request.GET.get('name', '')
+        response = requests.get(f"https://www.anapioficeandfire.com/api/books?name={query}")
+        data = []
+        if response.ok:
+            for d in response.json():
+                data.append({
+                    'name': d['name'],
+                    'isbn': d['isbn'],
+                    'authors': d['authors'],
+                    'number_of_pages': d['numberOfPages'],
+                    'publisher': d['publisher'],
+                    'country': d['country'],
+                    'release_date': datetime.strptime(d['released'], '%Y-%m-%dT%H:%M:%S').strftime("%Y-%m-%d")
+                })
+        return Response({
+                'status_code': 200,
+                'status': 'success',
+                'data': data
             })
-    message = {
-            'status_code': 200,
-            'status': 'success',
-            'data': data
-        }
-    return JsonResponse(message, safe=False)
 
 
 class BookViewset(viewsets.ModelViewSet):
@@ -70,6 +73,7 @@ class BookViewset(viewsets.ModelViewSet):
             'data': serializer_data
         })
 
+    # TODO: needs work!
     def create(self, request, *args, **kwargs):
         serializer = BookSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -100,6 +104,7 @@ class BookViewset(viewsets.ModelViewSet):
             'data': []
         })
 
+    # TODO: needs work!
     def partial_update(self, request, *args, **kwargs):
         book = self.get_object()
         serializer = BookSerializer(book)

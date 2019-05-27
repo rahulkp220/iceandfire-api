@@ -18,7 +18,7 @@ from django.urls import path, include
 from django.conf.urls import url
 from rest_framework import routers
 
-from book.views import BookViewset, external_books
+from book.views import BookViewset, ExternalBookView
 
 api_router = routers.SimpleRouter()
 api_router.register(
@@ -31,6 +31,6 @@ admin.autodiscover()
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'api/external-books/', external_books),
+    url(r'api/external-books/', ExternalBookView.as_view()),
     url(r'api/v1/', include((api_router.urls, 'books'), namespace='v1'))
 ]
