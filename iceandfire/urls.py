@@ -20,7 +20,7 @@ from rest_framework import routers
 
 from book.views import BookViewset, ExternalBookView
 
-api_router = routers.SimpleRouter()
+api_router = routers.SimpleRouter(trailing_slash=False)
 api_router.register(
     'books',
     BookViewset,
