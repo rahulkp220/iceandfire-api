@@ -12,7 +12,7 @@ from rest_framework.renderers import JSONRenderer
 from .models import Book
 from .serializers import (
     BookSerializer,
-    BookCreateSerializer,
+    BookCreateUpdateSerializer,
     AuthorSerializer
 )
 
@@ -77,7 +77,7 @@ class BookViewset(viewsets.ModelViewSet):
         })
 
     def create(self, request, *args, **kwargs):
-        serializer = BookCreateSerializer(data=request.data)
+        serializer = BookCreateUpdateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         model_obj = serializer.save()
         model_obj_data = self.get_serializer(model_obj).data
@@ -107,12 +107,13 @@ class BookViewset(viewsets.ModelViewSet):
             'data': []
         })
 
-    # TODO: needs work!
-    def partial_update(self, request, *args, **kwargs):
-        book = self.get_object()
-        serializer = BookSerializer(book)
+    def update(self, request, *args, **kwargs):
+        serializer = BookCreateUpdateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        model_obj = serializer.save()
+        model_obj_data = self.get_serializer(model_obj).data
         return Response({
-            'status_code': 200,
-            'status': 'success',
-            'data': serializer.data
-        })
+                'status_code': 200,
+                'status': 'success',
+                'data': model_obj_data
+            })

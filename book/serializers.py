@@ -4,6 +4,7 @@ from rest_framework.serializers import (
     SerializerMethodField,
 )
 from .models import Book, Author
+from django.contrib.auth.validators import UnicodeUsernameValidator
 
 
 class AuthorSerializer(ModelSerializer):
@@ -39,7 +40,7 @@ class BookSerializer(ModelSerializer):
         depth = 1
 
 
-class BookCreateSerializer(ModelSerializer):
+class BookCreateUpdateSerializer(ModelSerializer):
     authors = AuthorSerializer(many=True)
 
     class Meta:
@@ -54,6 +55,11 @@ class BookCreateSerializer(ModelSerializer):
             'country',
             'release_date'
         )
+        # extra_kwargs = {
+        #     'name': {
+        #         'validators': [],
+        #     }
+        # }
 
     def create(self, validated_data):
         authors_data = validated_data.pop('authors')
@@ -61,4 +67,23 @@ class BookCreateSerializer(ModelSerializer):
         for author in authors_data:
             author_instance, created = Author.objects.get_or_create(**author)
             instance.authors.add(author_instance)
+        return instance
+
+    def update(self, instance, validated_data):
+        authors_data = validated_data.pop('authors')
+        authors = list((instance.authors).all())
+
+        instance.name = validated_data.get('name', instance.name)
+        instance.isbn = validated_data.get('isbn', instance.isbn)
+        instance.number_of_pages = validated_data.get('number_of_pages', instance.number_of_pages)
+        instance.publisher = validated_data.get('publisher', instance.publisher)
+        instance.country = validated_data.get('country', instance.country)
+        instance.release_date = validated_data.get('release_date', instance.release_date)
+        instance.save()
+
+        for author_data in authors_data:
+            author = authors.pop(0)
+            author.name = author_data.get('name', author.name)
+            author.save()
+
         return instance
