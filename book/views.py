@@ -116,5 +116,6 @@ class BookViewset(viewsets.ModelViewSet):
         return Response({
                 'status_code': 200,
                 'status': 'success',
+                'message': f'The book {instance.name} was updated successfully',
                 'data': model_obj_data
             })

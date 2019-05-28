@@ -155,6 +155,7 @@ class BookViewset(APITestCase):
         self.assertDictEqual(response.json(), {
             "status_code": 200,
             "status": "success",
+            "message": "The book Patch Book was updated successfully",
             "data": {
                 "id": self.book.id,
                 "name": "Patch Book",
