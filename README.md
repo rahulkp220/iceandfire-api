@@ -24,11 +24,11 @@ Once the server is up and running, go through
 
 #### Simple API
 * `http://localhost:8080/api/external-books/` to fetch all the results
-* `http://localhost:8080/api/external-books/?name=nameOfABook` to fetch results for a specific book.
+* `http://localhost:8080/api/external-books?name=nameOfABook` to fetch results for a specific book.
 
 
 #### DRF based REST API
-`http://localhost:8080/api/v1/books/` for all CRUD operations
+`http://localhost:8080/api/v1/books` for all CRUD operations
 
 
 ### Tests & Coverage
