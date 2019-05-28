@@ -31,6 +31,6 @@ admin.autodiscover()
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'api/external-books/', ExternalBookView.as_view()),
+    url(r'api/external-books/', ExternalBookView.as_view(), name='external_books'),
     url(r'api/v1/', include((api_router.urls, 'books'), namespace='v1'))
 ]

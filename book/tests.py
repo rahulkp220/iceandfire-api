@@ -10,7 +10,12 @@ from .models import Book, Author
 class ExternalBookViewTest(TestCase):
 
     def test_get_without_data(self):
-        response = self.client.get('/api/external-books/?name=Test')
+        """
+        Test URL without a valid book name
+        """
+        url = '{}?name=Test'.format(reverse('external_books'))
+        response = self.client.get(url)
+
         self.assertEqual(response.status_code, 200)
         self.assertDictEqual(response.json(), {
                 'status_code': 200,
@@ -19,7 +24,12 @@ class ExternalBookViewTest(TestCase):
             })
 
     def test_get_with_data(self):
-        response = self.client.get('/api/external-books/?name=A%20Game%20of%20Thrones')
+        """
+        Test URL with a valid book name
+        """
+        url = '{}?name=A%20Game%20of%20Thrones'.format(reverse('external_books'))
+        response = self.client.get(url)
+
         self.assertEqual(response.status_code, 200)
         self.assertDictEqual(response.json(), {
                 "status_code": 200,
@@ -58,6 +68,9 @@ class BookViewset(APITestCase):
         self.book.authors.add(self.author)
 
     def test_create(self):
+        """
+        Test CREATE method
+        """
         test_data = {
             "name": "Sample Book",
             "isbn": "123456789",
@@ -93,6 +106,9 @@ class BookViewset(APITestCase):
         })
 
     def test_list(self):
+        """
+        Test LIST method
+        """
         response = self.client.get(reverse('v1:books-list'))
         self.assertEqual(response.status_code, 200)
         self.assertDictEqual(response.json(), {
@@ -115,6 +131,9 @@ class BookViewset(APITestCase):
         })
 
     def test_retrieve(self):
+        """
+        Test DETAIL method
+        """
         response = self.client.get(reverse('v1:books-detail', kwargs={'pk': self.book.id}))
         self.assertEqual(response.status_code, 200)
         self.assertDictEqual(response.json(), {
@@ -135,6 +154,9 @@ class BookViewset(APITestCase):
         })
 
     def test_patch(self):
+        """
+        Test UPDATE method
+        """
         patch_data = {
             "name": "Patch Book",
             "isbn": "123456788",
@@ -171,6 +193,9 @@ class BookViewset(APITestCase):
         })
 
     def test_destroy(self):
+        """
+        Test DELETE method
+        """
         response = self.client.delete(reverse('v1:books-detail', kwargs={'pk': self.book.id}))
         self.assertEqual(response.status_code, 200)
         self.assertDictEqual(response.json(), {
