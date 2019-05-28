@@ -1,3 +1,4 @@
+import json
 from django.test import TestCase, Client
 from rest_framework.test import APIClient
 
@@ -45,6 +46,41 @@ class ExternalBookViewTest(TestCase):
 class BookViewset(TestCase):
     client = APIClient()
 
+    def test_create(self):
+        test_data = {
+            "name": "Sample Book",
+            "isbn": "123456789",
+            "authors":[{
+                "name":"Sample Author"
+            }],
+            "number_of_pages": 999,
+            "publisher": "Sample Publisher",
+            "country": "India",
+            "release_date":"2019-05-28"
+        }
+        response = self.client.post(
+            '/api/v1/books/', 
+            data=json.dumps(test_data), 
+            content_type='application/json'
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertDictEqual(response.json(), {
+            "status_code": 201,
+            "status": "success",
+            "data": {
+                "id": 1,
+                "name": "Sample Book",
+                "isbn": "123456789",
+                "authors": [
+                    "Sample Author"
+                ],
+                "number_of_pages": 999,
+                "publisher": "Sample Publisher",
+                "country": "India",
+                "release_date": "2019-05-28"
+            }
+        })
+
     def test_list(self):
         response = self.client.get('/api/v1/books/')
         self.assertEqual(response.status_code, 200)
@@ -54,10 +90,6 @@ class BookViewset(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_patch(self):
-        response = self.client.get('/api/v1/books/1/')
-        self.assertEqual(response.status_code, 404)
-
-    def test_create(self):
         response = self.client.get('/api/v1/books/1/')
         self.assertEqual(response.status_code, 404)
 

@@ -55,11 +55,11 @@ class BookCreateUpdateSerializer(ModelSerializer):
             'country',
             'release_date'
         )
-        # extra_kwargs = {
-        #     'name': {
-        #         'validators': [],
-        #     }
-        # }
+        extra_kwargs = {
+            'name': {
+                'validators': [],
+            }
+        }
 
     def create(self, validated_data):
         authors_data = validated_data.pop('authors')

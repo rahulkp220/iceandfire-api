@@ -108,7 +108,8 @@ class BookViewset(viewsets.ModelViewSet):
         })
 
     def update(self, request, *args, **kwargs):
-        serializer = BookCreateUpdateSerializer(data=request.data)
+        instance = self.get_object()
+        serializer = BookCreateUpdateSerializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
         model_obj = serializer.save()
         model_obj_data = self.get_serializer(model_obj).data

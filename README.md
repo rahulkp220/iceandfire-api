@@ -10,8 +10,8 @@ git clone https://github.com/rahulkp220/iceandfire-api.git
 cd iceandfire-api
 python3 -m venv env
 source env/bin/activate
-python install -r requirements.txt
-python manage.py migrate
+pip install -r requirements.txt
+python manage.py migrate --run-syncdb
 python manage.py runserver 8080
 ```
 
