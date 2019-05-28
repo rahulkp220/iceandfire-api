@@ -31,9 +31,31 @@ Once the server is up and running, go through
 `http://localhost:8080/api/v1/books/` for all CRUD operations
 
 
-#### Tests
+### Tests & Coverage
 Just run `python manage.py test` to trigger tests on your local machine.
+To check coverage, run the following:
+* `coverage run --source="." manage.py test book` 
+* `coverage report`
 
+Current coverage report is shared below.
+```
+Name                     Stmts   Miss  Cover
+--------------------------------------------
+book/__init__.py             0      0   100%
+book/admin.py               10      0   100%
+book/apps.py                 3      3     0%
+book/models.py              16      2    88%
+book/serializers.py         48      0   100%
+book/tests.py               44      0   100%
+book/views.py               66      5    92%
+iceandfire/__init__.py       0      0   100%
+iceandfire/settings.py      18      0   100%
+iceandfire/urls.py           9      0   100%
+iceandfire/wsgi.py           4      4     0%
+manage.py                   12      2    83%
+--------------------------------------------
+TOTAL                      230     16    93%
+```
 
 ### Contributions Welcome! 
 :tada: :tada:
